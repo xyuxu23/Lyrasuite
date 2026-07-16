@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout :: layout(~{::content}, ~{::scripts})}">
+    <!-- 1. 页面主要内容片段 -->
+    <div th:fragment="content">
+
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        <i class="bi bi-lightning-charge-fill text-yellow me-2"></i> Gadget Generator
+                    </h2>
+                    <div class="text-muted mt-1">Generate Java deserialization gadget chains.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cards">
+            <!-- 左侧：设置面板 -->
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Generation Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="gadgetForm" onsubmit="return false;">
+
+                            <!-- 1. Gadget 选择 -->
+                            <div class="mb-3">
+                                <label class="form-label">Gadget Chain</label>
+                                <select class="form-select" id="gadgetChain" onchange="GadgetModule.onSelectionChange()">
+                                    <option value="" disabled selected>Loading...</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. 命令输入 -->
+                            <div class="mb-3">
+                                <label class="form-label">Command</label>
+                                <div class="input-group input-group-flat">
+                                    <input type="text" class="form-control" id="gadgetCommand" placeholder="calc">
+                                    <span class="input-group-text">
+                                        <a href="#" class="link-secondary" onclick="document.getElementById('gadgetCommand').value=''" title="Clear">
+                                            <i class="bi bi-x"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- 3. 编码与选项 -->
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Encoding</label>
+                                    <select class="form-select" id="encodingSelect">
+                                        <option value="Base64" selected>Base64</option>
+                                        <option value="Hex">Hex</option>
+                                        <option value="None">None (Raw)</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Options</label>
+                                    <label class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="dirtyDataCheck">
+                                        <span class="form-check-label">Dirty Data</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 生成按钮 -->
+                            <div class="d-flex mt-4">
+                                <button type="button" class="btn btn-primary w-100" onclick="GadgetModule.generate()">
+                                    <i class="bi bi-lightning-charge me-2"></i> Generate Payload
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：输出面板 -->
+            <div class="col-md-7">
+                <div class="card h-120">
+                    <div class="card-header">
+                        <h3 class="card-title">Output Result</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-ghost-secondary" onclick="GadgetModule.copyResult()">
+                                <i class="bi bi-clipboard me-1"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea id="gadgetOutput" class="form-control h-120 border-0"
+                                  style="font-family: 'Consolas', monospace; resize: none; min-height: 400px; font-size: 0.9rem;"
+                                  readonly placeholder="Payload will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
+</html>

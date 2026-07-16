@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout :: layout(~{::content}, ~{::scripts})}">
+
+    <div th:fragment="content">
+
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        <i class="bi bi-speedometer2 text-blue me-2"></i> Fastjson Exploitation
+                    </h2>
+                    <div class="text-muted mt-1">Generate JSON payloads for Fastjson deserialization vulnerabilities.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cards">
+
+            <!-- 左侧：设置面板 -->
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fastjson Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="fastjsonForm" onsubmit="return false;">
+
+                            <!-- 1. Payload 类型 -->
+                            <div class="mb-3">
+                                <label class="form-label">Exploit Type</label>
+                                <select class="form-select" id="fastjsonType" onchange="FastjsonModule.onTypeChange()">
+                                    <option value="" disabled selected>Loading...</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. 命令输入框  -->
+                            <div class="mb-3" id="commandGroup">
+                                <label class="form-label">Command / DNS Domain</label>
+                                <div class="input-group input-group-flat">
+                                    <input type="text" class="form-control" id="fastjsonCommand" placeholder="calc or your-dnslog.com">
+                                    <span class="input-group-text">
+                                        <a href="#" class="link-secondary" onclick="document.getElementById('fastjsonCommand').value=''" title="Clear">
+                                            <i class="bi bi-x"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="echoGroup" style="display: none;">
+                                <label class="form-label">Echo Mode (TemplatesImpl Only)</label>
+                                <select class="form-select" id="fastjsonEcho" onchange="FastjsonModule.onEchoChange()">
+                                    <option value="None">None (Normal Command Execution)</option>
+                                    <option value="TomcatEcho">Tomcat Echo</option>
+                                    <option value="SpringEcho">Spring Echo</option>
+                                </select>
+                                <div class="form-hint small text-muted mt-1" id="echoHint" style="display: none;">
+                                    Send request with header: <strong>X-Token: your_command</strong>
+                                </div>
+                            </div>
+
+                            <!-- 3. JNDI URL 输入框  -->
+                            <div class="mb-3" id="jndiGroup" style="display: none;">
+                                <label class="form-label">JNDI Target URL</label>
+                                <input type="text" class="form-control" id="jndiUrl" placeholder="ldap://127.0.0.1:1389/Exploit">
+                            </div>
+
+                            <!-- 生成按钮 -->
+                            <div class="d-flex mt-4">
+                                <button type="button" class="btn btn-primary w-100" onclick="FastjsonModule.generate()">
+                                    <i class="bi bi-lightning-charge me-2"></i> Generate JSON Payload
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：输出面板 -->
+            <div class="col-md-7">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="card-title">JSON Payload Output</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-ghost-secondary" onclick="FastjsonModule.copyResult()">
+                                <i class="bi bi-clipboard me-1"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea id="fastjsonOutput" class="form-control h-100 border-0"
+                                  style="font-family: 'Consolas', monospace; resize: none; min-height: 480px; font-size: 0.9rem;"
+                                  readonly placeholder="Waiting for generation..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
+</html>

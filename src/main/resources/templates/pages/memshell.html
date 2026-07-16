@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout :: layout(~{::content}, ~{::scripts})}">
+    <div th:fragment="content">
+        <div class="container-xl d-flex flex-column justify-content-center" style="min-height: 60vh;">
+            <div class="empty">
+                <div class="empty-icon">
+                    <i class="bi bi-cone-striped" style="font-size: 3.5rem; color: #f59f00;"></i>
+                </div>
+                <p class="empty-title">Memory Shell Generator</p>
+                <p class="empty-subtitle text-secondary">
+                    该模块正在紧锣密鼓地开发中...<br>
+                    预计将在 <strong>v2.1</strong> 版本上线，支持 Tomcat, Spring, Resin 等多种中间件的一键内存马注入。
+                </p>
+                <div class="empty-action">
+                    <button class="btn btn-primary" disabled>
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        Coding in progress...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

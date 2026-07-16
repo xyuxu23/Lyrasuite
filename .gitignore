@@ -1,0 +1,31 @@
+# Build output
+target/
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - VS Code
+.vscode/
+
+# IDE - Eclipse
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Maven wrapper JAR (optional - uncomment if you don't want to track it)
+# .mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*

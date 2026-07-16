@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout :: layout(~{::content}, ~{::scripts})}">
+
+    <div th:fragment="content">
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        🐍 SnakeYAML Exploitation
+                    </h2>
+                    <div class="text-muted mt-1">Generate malicious YAML payloads for deserialization vulnerabilities.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cards">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Payload Config</h3>
+                    </div>
+                    <div class="card-body">
+                        <form onsubmit="SnakeYamlModule.generate(); return false;">
+                            <div class="mb-3">
+                                <label class="form-label required">Gadget Type</label>
+                                <select class="form-select" id="snakeType" onchange="SnakeYamlModule.onTypeChange()">
+                                </select>
+                                <div class="form-hint small text-muted mt-1">
+                                    Select 'ScriptEngineManager' for outbound HTTP bypass (SPI).
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="groupJndiUrl">
+                                <label class="form-label required">JNDI URL</label>
+                                <input type="text" class="form-control" id="snakeJndiUrl" placeholder="ldap://1.2.3.4:1389/Exploit">
+                            </div>
+
+                            <div class="mb-3 d-none" id="groupSpiIp">
+                                <label class="form-label required">IP (SPI)</label>
+                                <input type="text" class="form-control" id="spiIp" placeholder="your public ip (e.g. 1.2.3.4)">
+                                <div class="form-hint small text-muted mt-1">
+                                    Used for SPI HTTP callback (must be reachable by target).
+                                </div>
+                            </div>
+                            <div class="mb-3 d-none" id="groupCommand">
+                                <label class="form-label required">Command</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-terminal"></i></span>
+                                    <input type="text" class="form-control" id="snakeCommand" placeholder="whoami">
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary w-100" id="btnGenerateSnake" onclick="SnakeYamlModule.generate()">
+                                <i class="bi bi-lightning-charge-fill me-2"></i> Generate Payload
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-3 d-none" id="cardSpiStatus">
+                    <div class="card-header">
+                        <h3 class="card-title">SPI Server Status</h3>
+                        <div class="card-actions">
+                            <span class="status status-dot status-secondary" id="spiStatusDot"></span>
+                            <span class="ms-2 text-muted" id="spiStatusText">Stopped</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="spiInfo" class="mb-3 text-muted small">
+                            Service is currently idle.
+                        </div>
+
+                        <button class="btn btn-danger w-100" id="btnStopSpi" onclick="SnakeYamlModule.stopServer()" disabled>
+                            <i class="bi bi-stop-circle me-2"></i> Stop Server
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Generated YAML</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-ghost-primary" id="btnCopy" onclick="SnakeYamlModule.copyResult()">
+                                <i class="bi bi-clipboard me-1"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea id="snakeResult" class="form-control border-0"
+                                  style="font-family: 'Consolas', monospace; font-size: 0.9rem; resize: none; height: 200px;"
+                                  readonly placeholder="Payload will appear here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-terminal me-2"></i> Console Output
+                        </h3>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-ghost-secondary" onclick="SnakeYamlModule.clearLog()">
+                                <i class="bi bi-trash me-1"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea id="snakeLogArea" class="form-control"
+                                  style="font-family: 'Consolas', monospace; font-size: 0.85rem; resize: none; height: 300px;"
+                                  readonly placeholder="Waiting for logs..."></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

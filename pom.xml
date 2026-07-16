@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.xyuxu.javasec</groupId>
+    <artifactId>LyraSuite-Web</artifactId>
+    <version>2.0.0</version>
+    <name>LyraSuite Web</name>
+    <description>Java Security Gadget Generator &amp; JNDI Server</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Web MVC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Security & Shiro -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring-boot-web-starter</artifactId>
+            <version>1.13.0</version>
+        </dependency>
+
+        <!-- Thymeleaf Template Engine -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+        <!-- Lombok  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Gadget Generation Dependencies -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.30.2-GA</version>
+        </dependency>
+
+        <!-- JNDI Server Dependencies -->
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+
+
+        <!-- Gadget Chain Libraries (Specific Versions) -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compiler Plugin Configuration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release combine.self="override"></release>
+
+                    <source>21</source>
+                    <target>21</target>
+
+                    <compilerArgs>
+                        <arg>-proc:full</arg>
+                        <arg>-XDignore.symbol.file</arg>
+
+                        <arg>--add-modules</arg>
+                        <arg>jdk.naming.rmi</arg>
+
+                        <arg>--add-exports</arg>
+                        <arg>java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.xml/com.sun.org.apache.xalan.internal.xsltc=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.xml/com.sun.org.apache.xml.internal.dtm=ALL-UNNAMED</arg>
+
+                        <arg>--add-exports</arg>
+                        <arg>jdk.naming.rmi/com.sun.jndi.rmi.registry=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.rmi/sun.rmi.server=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.rmi/sun.rmi.transport=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.rmi/sun.rmi.registry=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.base/sun.reflect.annotation=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.base/sun.net.util=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.desktop/sun.awt=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>java.base/sun.security.util=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

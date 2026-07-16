@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="sidebar-menu" class="navbar navbar-vertical navbar-expand-lg">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <h1 class="navbar-brand navbar-brand-autodark">
+            <a th:href="@{/}" class="text-decoration-none d-flex align-items-center">
+                <i class="bi bi-shield-lock-fill text-blue me-2" style="font-size: 1.5rem;"></i>
+                LyraSuite
+            </a>
+        </h1>
+
+        <!-- 内容 -->
+        <div class="collapse navbar-collapse d-flex flex-column" id="sidebar-menu">
+            <!-- ===== 主菜单 ===== -->
+            <ul class="navbar-nav pt-lg-3 w-100">
+
+                <li class="nav-item" th:classappend="${activeModule == 'gadget'} ? 'active'">
+                    <a class="nav-link" th:href="@{/gadget}">
+                        <span class="nav-link-icon"><i class="bi bi-lightning-charge"></i></span>
+                        <span class="nav-link-title">Gadget Generator</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'jndi'} ? 'active'">
+                    <a class="nav-link" th:href="@{/jndi}">
+                        <span class="nav-link-icon"><i class="bi bi-hdd-network"></i></span>
+                        <span class="nav-link-title">JNDI Control</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'fastjson'} ? 'active'">
+                    <a class="nav-link" th:href="@{/fastjson}">
+                        <span class="nav-link-icon"><i class="bi bi-braces"></i></span>
+                        <span class="nav-link-title">Fastjson Exploit</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'snakeyaml'} ? 'active'">
+                    <a class="nav-link" th:href="@{/snakeyaml}">
+                        <span class="nav-link-icon"><i class="bi bi-bezier2"></i></span>
+                        <span class="nav-link-title">SnakeYAML Exploit</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'shiro'} ? 'active'">
+                    <a class="nav-link" th:href="@{/shiro}">
+                        <span class="nav-link-icon"><i class="bi bi-shield-check"></i></span>
+                        <span class="nav-link-title">Shiro Exploit</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'codec'} ? 'active'">
+                    <a class="nav-link" th:href="@{/codec}">
+                        <span class="nav-link-icon"><i class="bi bi-arrow-left-right"></i></span>
+                        <span class="nav-link-title">Codec Tools</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" th:classappend="${activeModule == 'memshell'} ? 'active'">
+                    <a class="nav-link" th:href="@{/memshell}">
+                        <span class="nav-link-icon"><i class="bi bi-incognito"></i></span>
+                        <span class="nav-link-title">Memory Shell</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- =====用户 ===== -->
+            <div class="mt-auto w-100 px-3 pb-3">
+                <div class="user-card">
+
+                    <!-- 用户信息 + 主题按钮同一行 -->
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <!-- 左侧：用户名 + 角色 -->
+                        <div>
+                            <div class="user-name"
+                                 th:text="${#authentication.name}">
+                                Username
+                            </div>
+
+                            <div class="user-role"
+                                 th:text="${#authentication.authorities.size() > 0 ? #authentication.authorities[0].authority : 'USER'}">
+                                Role
+                            </div>
+                        </div>
+
+                        <!-- 右侧：主题切换 -->
+                        <div class="d-flex gap-1">
+                            <a href="javascript:void(0)"
+                               class="theme-btn hide-theme-dark"
+                               onclick="setAppTheme('dark')"
+                               title="暗黑模式">
+                                <i class="bi bi-moon"></i>
+                            </a>
+                            <a href="javascript:void(0)"
+                               class="theme-btn hide-theme-light"
+                               onclick="setAppTheme('light')"
+                               title="亮色模式">
+                                <i class="bi bi-sun"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

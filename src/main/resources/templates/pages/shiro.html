@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout :: layout(~{::content}, ~{::scripts})}">
+
+    <div th:fragment="content">
+
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        <i class="bi bi-shield-lock-fill text-red me-2"></i> Shiro Exploitation
+                    </h2>
+                    <div class="text-muted mt-1">Detect and exploit Shiro deserialization vulnerabilities.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cards">
+            <!-- 【左侧】：配置 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Shiro Scan Config</h3>
+                        <div class="card-actions">
+                            <span class="status status-dot status-secondary" id="shiroStatusDot"></span>
+                            <span id="shiroStatusText" class="ms-2 text-muted">Idle</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="configForm">
+                            <!-- 基础目标设置 -->
+                            <div class="mb-3">
+                                <label class="form-label required">Target URL</label>
+                                <div class="input-group">
+                                    <select class="form-select flex-grow-0 w-auto" id="reqMethod">
+                                        <option value="GET">GET</option>
+                                        <option value="POST">POST</option>
+                                    </select>
+                                    <input type="text" class="form-control" id="targetUrl" placeholder="http://target.com/login">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Timeout (s)</label>
+                                    <input type="number" class="form-control" id="timeout" value="10">
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-label">Mode</div>
+                                    <label class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" id="checkGCM">
+                                        <span class="form-check-label">AES GCM</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Step 1: Key 区域 -->
+                            <div class="hr-text text-primary my-3">Step 1: Shiro Key</div>
+
+                            <div class="mb-2">
+                                <input type="text" class="form-control font-monospace" id="specifiedKey" placeholder="Key (Leave empty to Brute Force)">
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-primary w-100" onclick="ShiroModule.startScan('key_check')">
+                                        Check Key
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-primary w-100" onclick="ShiroModule.startScan('key_brute')">
+                                        Brute Key
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Gadget 区域 -->
+                            <div class="hr-text text-success my-3">Step 2: Gadget Chain</div>
+
+                            <div class="mb-2">
+                                <select class="form-select mb-2" id="gadgetSelect"></select>
+                                <select class="form-select" id="echoSelect"></select>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-success w-100" onclick="ShiroModule.startScan('gadget_check')">
+                                        Check Chain
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-success w-100" onclick="ShiroModule.startScan('gadget_brute')">
+                                        Brute Chain
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【右侧】：控制台 -->
+            <div class="col-md-8">
+                <div class="card h-100" style="min-height: 550px; display: flex; flex-direction: column;">
+
+                    <!-- 1. 表头 -->
+                    <div class="card-header border-bottom-0">
+                        <h3 class="card-title icon-text">
+                            <i class="bi bi-terminal me-2"></i> Console Output
+                        </h3>
+                        <div class="card-actions">
+                            <button type="button" class="btn btn-sm btn-ghost-secondary" onclick="ShiroModule.clearLog()">
+                                <i class="bi bi-trash me-1"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. 命令栏 -->
+                    <div class="card-body border-bottom py-2 px-3 flex-grow-0">
+                        <div class="input-group">
+                            <span class="input-group-text text-muted border-end-0">
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 ps-0" id="cmdInput"
+                                   placeholder="Enter command here (e.g. whoami)..."
+                                   onkeydown="if(event.keyCode===13) ShiroModule.execCmd()">
+                            <button type="button" class="btn btn-secondary" onclick="ShiroModule.execCmd()">
+                                Execute
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3. 日志区 -->
+                    <div class="card-body p-0">
+                        <div id="shiroLogArea" class="w-100 p-3 font-monospace"
+                             style="height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5;">
+                            <div class="text-secondary">[*] System ready. Waiting for tasks...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</th:block>
+</html>

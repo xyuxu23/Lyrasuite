@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content, scripts)">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title th:text="${pageTitle} ?: 'LyraSuite Tool'">LyraSuite Web</title>
+
+    <!-- 1. 样式表 -->
+    <link rel="stylesheet" th:href="@{/css/tabler.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.5; } }
+    </style>
+    <!-- 2. 核心基础库 -->
+    <script th:src="@{/js/theme.js}" ></script>
+    <script th:src="@{/js/tabler.min.js}" defer></script>
+    <script th:src="@{/js/axios.min.js}" defer></script>
+    <script th:src="@{/js/htmx.min.js}" defer></script>
+    <script th:src="@{/js/api.js}" defer></script>
+
+    <!-- 3. 业务模块脚本 -->
+    <script th:src="@{/js/modules/gadget.js}" defer></script>
+    <script th:src="@{/js/modules/jndi.js}" defer></script>
+    <script th:src="@{/js/modules/fastjson.js}" defer></script>
+    <script th:src="@{/js/modules/shiro.js}" defer></script>
+    <script th:src="@{/js/modules/snakeyaml.js}" defer></script>
+    <script th:src="@{/js/modules/codec.js}" defer></script>
+
+    <!-- 4. 全局路由控制逻辑 -->
+    <script>
+        if (!window.AppRouterInitialized) {
+
+            function cleanupPreviousModules() {
+                if (window.JndiModule && typeof window.JndiModule.stopPolling === 'function') {
+                    window.JndiModule.stopPolling();
+                }
+                if (window.ShiroModule && typeof window.ShiroModule.stopPolling === 'function') {
+                    window.ShiroModule.stopPolling();
+                }
+                if (window.SnakeYamlModule && typeof window.SnakeYamlModule.stopPolling === 'function') {
+                    window.SnakeYamlModule.stopPolling();
+                }
+            }
+
+            function initCurrentModule() {
+                const path = window.location.pathname;
+                if (path.includes('/gadget')) {
+                    if (window.GadgetModule) window.GadgetModule.init();
+                }
+                else if (path.includes('/jndi')) {
+                    if (window.JndiModule) window.JndiModule.init();
+                }
+                else if (path.includes('/fastjson')) {
+                    if (window.FastjsonModule) window.FastjsonModule.init();
+                }
+                else if (path.includes('/shiro')) {
+                    if (window.ShiroModule) window.ShiroModule.init();
+                }
+                else if (path.includes('/snakeyaml')) {
+                    if (window.SnakeYamlModule) window.SnakeYamlModule.init();
+                }
+                else if (path.includes('/codec')) {
+                    if (window.CodecModule) window.CodecModule.init();
+                }
+            }
+            // 初始加载
+            document.addEventListener('DOMContentLoaded', () => {
+                initCurrentModule();
+            });
+            // HTMX 切换页面
+            document.addEventListener('htmx:afterSwap', (event) => {
+                initCurrentModule();
+            });
+            document.addEventListener('htmx:beforeSwap', (event) => {
+                cleanupPreviousModules();
+            });
+            window.AppRouterInitialized = true;
+        }
+    </script>
+</head>
+
+
+<body class="layout-fluid" hx-boost="true">
+    <div class="page">
+        <div th:replace="~{fragments/sidebar :: sidebar-menu}"></div>
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="container-xl">
+                    <div th:replace="${content}"></div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/footer :: footer}"></div>
+        </div>
+    </div>
+</body>
+</html>
